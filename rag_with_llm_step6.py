@@ -5,72 +5,97 @@ import os
 import json
 from typing import Dict, Any
 from collections import defaultdict, Counter
+from functools import lru_cache
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
-
-from qdrant_client import QdrantClient
+import requests  # <-- use raw HTTP for Qdrant
 
 from google import genai  # Gemini SDK
 
 
 # =========================
-# STEP 0: Configure Gemini client
+# Lazy singletons (Gemini + embedding model)
 # =========================
 
-gemini_key = os.getenv("GEMINI_API_KEY")
-if not gemini_key:
-    raise RuntimeError("GEMINI_API_KEY is not set in environment.")
+@lru_cache(maxsize=1)
+def get_gemini_client() -> genai.Client:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY is not set in environment.")
+    return genai.Client(api_key=api_key)
 
-client = genai.Client(api_key=gemini_key)
+
+@lru_cache(maxsize=1)
+def get_embedding_model() -> SentenceTransformer:
+    print("Loading SentenceTransformer model (first time)...")
+    model = SentenceTransformer(
+        "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    )
+    print("Model loaded!")
+    return model
 
 
 # =========================
-# STEP 1: Configure Qdrant + embedding model
+# Qdrant config (HTTP)
 # =========================
 
-QDRANT_URL = os.environ.get("QDRANT_URL")
-QDRANT_API_KEY = os.environ.get("QDRANT_API_KEY")
+QDRANT_URL = os.getenv("QDRANT_URL")  # e.g. https://xxxx.qdrant.tech
+QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 QDRANT_COLLECTION = "symptom_cases"
 
 if not QDRANT_URL or not QDRANT_API_KEY:
     raise RuntimeError("QDRANT_URL or QDRANT_API_KEY not set in environment.")
 
-qdrant = QdrantClient(
-    url=QDRANT_URL,
-    api_key=QDRANT_API_KEY,
-    timeout=60.0,
-)
 
-print("\nLoading embedding model (for query encoding)...")
-model = SentenceTransformer("sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
-print("Model loaded!")
+def qdrant_search(vector, k: int = 10):
+    """
+    Low-level HTTP search against Qdrant.
+    Uses /collections/{collection}/points/search
+    """
+    base_url = QDRANT_URL.rstrip("/")
+    url = f"{base_url}/collections/{QDRANT_COLLECTION}/points/search"
+
+    headers = {
+        "Content-Type": "application/json",
+        # Qdrant Cloud uses "api-key" header for auth
+        "api-key": QDRANT_API_KEY,
+    }
+
+    payload = {
+        "vector": vector,
+        "limit": k,
+        "with_payload": True,
+    }
+
+    resp = requests.post(url, headers=headers, json=payload, timeout=30)
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("result", [])
 
 
 # =========================
-# STEP 2: Retrieval + k-NN prediction (via Qdrant)
+# STEP 2: Retrieval + k-NN prediction (via Qdrant HTTP)
 # =========================
 
 def retrieve_similar_cases(query_text: str, k: int = 10):
     """
-    Use Qdrant to retrieve top-k similar past cases.
+    Use Qdrant HTTP API to retrieve top-k similar past cases.
     """
+
+    model = get_embedding_model()
 
     # Encode query to vector
     query_embedding = model.encode([query_text], convert_to_numpy=True)[0].astype("float32")
+    query_vector = query_embedding.tolist()
 
     # Qdrant search (cosine similarity -> higher score = more similar)
-    search_result = qdrant.search(
-        collection_name=QDRANT_COLLECTION,
-        query_vector=query_embedding.tolist(),
-        limit=k,
-        with_payload=True,
-    )
+    search_result = qdrant_search(query_vector, k=k)
 
     results = []
     for point in search_result:
-        payload = point.payload or {}
-        score = float(point.score)  # similarity
+        payload = point.get("payload") or {}
+        score = float(point.get("score", 0.0))  # similarity
 
         # convert similarity to distance-style so old weighting logic still works
         distance = 1.0 - score
@@ -144,7 +169,7 @@ def predict_disease_zone(user_text: str, k: int = 10) -> Dict[str, Any]:
 
 
 # =========================
-# STEP 3: Build LLM prompt (same logic as before)
+# STEP 3: Build LLM prompt
 # =========================
 
 ALLOWED_DISEASES = [
@@ -258,6 +283,7 @@ SIMILAR PAST CASES:
 # =========================
 
 def call_llm(prompt: str) -> Dict[str, Any]:
+    client = get_gemini_client()
     try:
         response = client.models.generate_content(
             model="gemini-2.5-flash",
@@ -344,3 +370,4 @@ if __name__ == "__main__":
     print(action_line)
     print("\nनोट: हा केवळ प्राथमिक अंदाज आहे, कृपया डॉक्टरांचा सल्ला नक्की घ्या.")
     print("===========================================================\n")
+
