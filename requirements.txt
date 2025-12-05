@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sentence-transformers
+scikit-learn
+numpy
+pandas
+openpyxl
+google-genai
+python-dotenv
+qdrant-client

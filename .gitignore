@@ -1,0 +1,21 @@
+# Virtual environment
+venv/
+.env
+
+# # Artifacts generated from embeddings
+# artifacts/
+# !artifacts/README.md
+
+artifacts/symptom_embeddings.npy
+artifacts/symptom_index.faiss
+artifacts/symptom_metadata.json
+artifacts/merged_symptom_dataset.csv
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# OS/editor local files
+.DS_Store
+.vscode/
+.env 
