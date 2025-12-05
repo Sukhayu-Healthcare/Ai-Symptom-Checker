@@ -8,3 +8,4 @@ openpyxl
 google-genai
 python-dotenv
 qdrant-client
+
