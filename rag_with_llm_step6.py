@@ -20,7 +20,8 @@ from google import genai  # Gemini SDK
 
 @lru_cache(maxsize=1)
 def get_gemini_client() -> genai.Client:
-    api_key = os.getenv("GEMINI_API_KEY")
+    # api_key = os.getenv("GEMINI_API_KEY")
+    api_key=REMOVED_SECRET
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not set in environment.")
     return genai.Client(api_key=api_key)
@@ -40,8 +41,10 @@ def get_embedding_model() -> SentenceTransformer:
 # Qdrant config (HTTP)
 # =========================
 
-QDRANT_URL = os.getenv("QDRANT_URL")  # e.g. https://xxxx.qdrant.tech
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+# QDRANT_URL = os.getenv("QDRANT_URL")  # e.g. https://xxxx.qdrant.tech
+QDRANT_URL = "REMOVED_SECRET"
+# QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
+***REMOVED***
 QDRANT_COLLECTION = "symptom_cases"
 
 if not QDRANT_URL or not QDRANT_API_KEY:
