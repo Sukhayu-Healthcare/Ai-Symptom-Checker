@@ -21,7 +21,7 @@ from google import genai  # Gemini SDK
 @lru_cache(maxsize=1)
 def get_gemini_client() -> genai.Client:
     # api_key = os.getenv("GEMINI_API_KEY")
-    api_key=REMOVED_SECRET
+    api_key="REMOVED_SECRET"
     if not api_key:
         raise RuntimeError("GEMINI_API_KEY is not set in environment.")
     return genai.Client(api_key=api_key)
