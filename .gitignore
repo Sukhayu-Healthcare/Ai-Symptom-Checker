@@ -1,6 +1,6 @@
 # Virtual environment
 venv/
-.env
+
 
 # # Artifacts generated from embeddings
 # artifacts/
