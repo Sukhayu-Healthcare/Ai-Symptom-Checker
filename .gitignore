@@ -1,6 +1,6 @@
 # Virtual environment
 venv/
-
+.env
 
 # # Artifacts generated from embeddings
 # artifacts/
@@ -19,4 +19,5 @@ __pycache__/
 .DS_Store
 .vscode/
 
+.env
 .env
