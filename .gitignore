@@ -1,25 +1,24 @@
-# Virtual environment
+# Virtual Environment
 venv/
 .env
 
-# # Artifacts generated from embeddings
-# artifacts/
-# !artifacts/README.md
+# Python Cache
+__pycache__/
+*.pyc
 
+# IDE Files
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Artifacts (Large Generated Files)
 artifacts/symptom_embeddings.npy
 artifacts/symptom_index.faiss
 artifacts/symptom_metadata.json
 artifacts/merged_symptom_dataset.csv
 
-# Python cache files
-__pycache__/
-*.pyc
-
-# OS/editor local files
-.DS_Store
-.vscode/
-
-.env
-.env
-replacements.txt
-replacements.txt
+# Logs
+*.log

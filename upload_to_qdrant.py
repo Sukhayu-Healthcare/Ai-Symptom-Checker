@@ -3,6 +3,9 @@ import json
 import time
 import numpy as np
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct
 from qdrant_client.http.exceptions import ResponseHandlingException

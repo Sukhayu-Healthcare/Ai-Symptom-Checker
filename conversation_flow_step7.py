@@ -35,19 +35,21 @@ def run_conversation():
     """
     Multi-turn conversation with these rules:
 
-    - Gemini ALONE decides whether to ask a follow-up question.
+    - Groq ALONE decides whether to ask a follow-up question.
     - We NEVER invent our own default questions.
     - We ONLY limit how many follow-ups can happen:
 
-        * If zone == Red:
-            - max_followups = 3
-        * If zone == Yellow or Orange:
-            - max_followups = 5
+        if zone == "Red":
+            max_followups = 3
+        elif zone == "Orange":
+            max_followups = 3
+        else:
+            max_followups = 4
 
     - Flow:
         1) Ask initial complaint
         2) Run analyze_patient()
-        3) If Gemini returns followup_question (non-empty) AND we are under max_followups:
+        3) If Groq returns followup_question (non-empty) AND we are under max_followups:
                ask user and append answer, then go to next round
            Else:
                stop and show final decision
@@ -73,10 +75,13 @@ def run_conversation():
         if round_num == 1:
             # Decide zone and max follow-ups after first result
             zone = llm["final_zone"]
+
             if zone == "Red":
                 max_followups = 3
+            elif zone == "Orange":
+                max_followups = 3
             else:
-                max_followups = 5
+                max_followups = 4
 
         pretty_print_result(f"STEP {round_num} RESULT", result)
 
@@ -95,16 +100,41 @@ def run_conversation():
 
         # Otherwise, ask the model's follow-up question
         print("Please answer the follow-up question (in Marathi):")
+
         print(model_q)
         answer = input("Your answer: ").strip()
+        # Normalize common short answers
+        if answer.lower() == "ho":
+            answer = "हो"
+
+        elif answer.lower() == "haa":
+            answer = "हो"
+
+        elif answer.lower() == "yes":
+            answer = "हो"
+
+        elif answer.lower() == "nhi":
+            answer = "नाही"
+
+        elif answer.lower() == "no":
+            answer = "नाही"
+
+        # If previous question asked "how many days" and user entered only a number
+        if model_q.startswith("ताप किती दिवस") and answer.isdigit():
+            answer += " दिवस"
+
 
         # Append answer to text for the next round
-        text = (
-            text
-            + "\n\n"
-            + f"अतिरिक्त माहिती (फॉलो-अप उत्तर {followup_count + 1}): "
-            + answer
-        )
+        text += f"""
+
+        FOLLOW-UP {followup_count + 1}
+
+        Question:
+        {model_q}
+
+        Patient Answer:
+        {answer}
+        """
 
         followup_count += 1
         round_num += 1

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Symptom Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <div class="scan-grid" aria-hidden="true"></div>
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="22" stroke="white" stroke-opacity="0.35" stroke-width="2"/>
+            <path d="M24 13v22M13 24h22" stroke="white" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>AI Symptom Checker</h1>
+          <p>तुमची लक्षणं सांगा, AI तुम्हाला योग्य दिशा दाखवेल</p>
+        </div>
+      </div>
+      <div class="header-pulse" aria-hidden="true">
+        <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+          <polyline class="pulse-line" points="0,30 120,30 145,10 165,50 190,30 600,30" />
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <!-- PERFORMANCE CTA -->
+    <a href="/performance" class="performance-cta">
+      <span class="performance-cta-icon">📊</span>
+      <span class="performance-cta-text">
+        <strong>Model Performance पहा</strong>
+        <small>Retrieval + LLM accuracy, confusion matrix आणि live metrics</small>
+      </span>
+      <span class="performance-cta-arrow">→</span>
+    </a>
+
+    <!-- COMPLAINT INPUT -->
+    <section class="card complaint-card" id="complaintCard">
+      <div class="card-label">
+        <span class="dot"></span>
+        तुमची तक्रार सांगा
+      </div>
+      <textarea
+        id="complaintInput"
+        placeholder="उदा. मला ताप आहे आणि अंग दुखतंय..."
+        rows="3"
+      ></textarea>
+      <div class="card-actions">
+        <button id="analyzeBtn" class="btn btn-primary">
+          <span class="btn-label">विश्लेषण करा</span>
+          <span class="spinner" hidden></span>
+        </button>
+        <button id="resetBtn" class="btn btn-ghost">पुन्हा सुरू करा</button>
+      </div>
+      <p id="errorText" class="error-text" hidden></p>
+    </section>
+
+    <!-- RESULT CARD -->
+    <section class="card result-card" id="resultCard" hidden>
+      <div id="emergencyBanner" class="emergency-banner" hidden>
+          🚨 ही गंभीर परिस्थिती असू शकते.
+          कृपया तात्काळ १०८ ला कॉल करा किंवा जवळच्या रुग्णालयात जा.
+      </div>     
+
+      <div class="result-top">
+        <span id="zoneBadge" class="zone-badge"></span>
+        <div class="confidence-box">
+            <span>🎯Case Match</span>
+            <strong id="confidenceValue">--%</strong>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <span class="result-icon">🩺</span>
+        <div>
+          <div class="result-heading">लक्षणे</div>
+          <p id="symptomsLine" class="result-text"></p>
+        </div>
+      </div>
+
+      <div class="result-row">
+        <span class="result-icon">✅</span>
+        <div>
+          <div class="result-heading">काय करावे</div>
+          <p id="actionLine" class="result-text"></p>
+        </div>
+      </div>
+
+      <p class="disclaimer">⚠️ हा केवळ प्राथमिक अंदाज आहे, कृपया डॉक्टरांचा सल्ला नक्की घ्या.</p>
+    </section>
+
+    <!-- FOLLOWUP CARD -->
+    <section class="card followup-card" id="followupCard" hidden>
+      <div class="followup-head">
+        <span class="followup-progress" id="progressLabel">Question 1 / 4</span>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      <p class="followup-question" id="followupQuestionText"></p>
+      <div class="followup-input-row">
+        <input type="text" id="followupAnswer" placeholder="तुमचे उत्तर इथे लिहा..." />
+        <button id="submitAnswerBtn" class="btn btn-primary">
+          <span class="btn-label">पाठवा</span>
+          <span class="spinner" hidden></span>
+        </button>
+      </div>
+    </section>
+
+
+  </main>
+
+  <footer class="app-footer">
+    <p>AI Symptom Checker · Retrieval-Augmented Triage Assistant · केवळ माहितीसाठी, वैद्यकीय सल्ल्याचा पर्याय नाही</p>
+  </footer>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

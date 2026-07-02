@@ -1,0 +1,12 @@
+{
+    "evaluation_type": "Retrieval Only",
+    "dataset_size": 75964,
+    "samples_evaluated": 5000,
+    "disease_accuracy": 96.0,
+    "zone_accuracy": 96.84,
+    "precision": 96.03,
+    "recall": 96.0,
+    "f1_score": 95.99,
+    "average_case_match": 100.0,
+    "average_response_time": 1.123
+}

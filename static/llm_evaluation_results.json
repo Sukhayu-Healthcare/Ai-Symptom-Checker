@@ -1,0 +1,11 @@
+{
+    "evaluation_type": "Retrieval + Groq",
+    "dataset_size": 75964,
+    "samples_evaluated": 50,
+    "disease_accuracy": 76.32,
+    "zone_accuracy": 89.47,
+    "precision": 83.2,
+    "recall": 76.32,
+    "f1_score": 77.08,
+    "average_response_time": 11.752
+}

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Model Performance</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/static/performance.css">
+
+</head>
+
+<body>
+
+<div class="scan-grid" aria-hidden="true"></div>
+
+<header class="hero">
+
+    <a href="/" class="back-link">← Symptom Checker</a>
+
+    <div class="hero-inner">
+
+        <div class="hero-eyebrow">
+            <span class="live-dot"></span>
+            Model Evaluation · Live Readout
+        </div>
+
+        <h1>AI Model <span class="grad-text">Performance</span></h1>
+
+        <p class="hero-sub">
+            Performance evaluation of the Retrieval-Augmented AI Symptom Checker —
+            measured across disease classification, triage-zone accuracy and response latency.
+        </p>
+
+        <div class="tech-badges">
+            <span class="badge">Python</span>
+            <span class="badge">FastAPI</span>
+            <span class="badge">Sentence Transformers</span>
+            <span class="badge">Qdrant</span>
+            <span class="badge">Groq Llama</span>
+            <span class="badge">HTML</span>
+            <span class="badge">CSS</span>
+            <span class="badge">JavaScript</span>
+        </div>
+
+    </div>
+
+    <svg class="hero-vitals" viewBox="0 0 1000 80" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="vitals-line" points="0,40 160,40 190,12 215,68 240,40 1000,40" />
+    </svg>
+
+</header>
+
+<main class="container">
+
+    <!-- Retrieval -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">01</span>
+            <div>
+                <h2>Retrieval Model</h2>
+                <p class="section-sub">Sentence-embedding + weighted k-NN search over the full clinical case bank.</p>
+            </div>
+        </div>
+
+        <div id="retrievalCards" class="card-grid"></div>
+
+    </section>
+
+    <!-- LLM -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">02</span>
+            <div>
+                <h2>LLM Reasoning</h2>
+                <p class="section-sub">Groq-hosted Llama model reasoning over retrieved cases to confirm diagnosis and triage zone.</p>
+            </div>
+        </div>
+
+        <div id="llmCards" class="card-grid"></div>
+
+    </section>
+
+    <!-- Dataset -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">03</span>
+            <div>
+                <h2>Dataset</h2>
+                <p class="section-sub">Scale and composition of the evaluation corpus.</p>
+            </div>
+        </div>
+
+        <div id="datasetCard" class="card-grid"></div>
+
+    </section>
+
+    <!-- Pipeline -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">04</span>
+            <div>
+                <h2>AI Pipeline</h2>
+                <p class="section-sub">How a patient complaint travels from raw text to a triage decision.</p>
+            </div>
+        </div>
+
+        <div class="pipeline">
+
+            <div class="pipe-step">
+                <div class="pipe-icon">💬</div>
+                <div class="pipe-label">Patient Complaint</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step">
+                <div class="pipe-icon">🧬</div>
+                <div class="pipe-label">Sentence Embedding</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step">
+                <div class="pipe-icon">🧭</div>
+                <div class="pipe-label">Vector Search</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step">
+                <div class="pipe-icon">📚</div>
+                <div class="pipe-label">Top-k Retrieval</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step">
+                <div class="pipe-icon">🧠</div>
+                <div class="pipe-label">LLM Clinical Reasoning</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step">
+                <div class="pipe-icon">🩺</div>
+                <div class="pipe-label">Disease Prediction</div>
+            </div>
+
+            <span class="pipe-arrow">→</span>
+
+            <div class="pipe-step pipe-step-final">
+                <div class="pipe-icon">🚦</div>
+                <div class="pipe-label">Triage Zone</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Methodology -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">05</span>
+            <div>
+                <h2>Evaluation Methodology</h2>
+                <p class="section-sub">How each layer of the pipeline was scored independently.</p>
+            </div>
+        </div>
+
+        <div class="method-grid">
+
+            <div class="method-card">
+                <div class="method-head">
+                    <span class="method-icon">🔎</span>
+                    <h3>Retrieval Evaluation</h3>
+                </div>
+                <p>
+                    Each patient case is embedded and matched against the Qdrant vector
+                    index using a weighted k-NN search. The predicted disease and triage
+                    zone are compared against ground truth across the full held-out sample.
+                </p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-head">
+                    <span class="method-icon">🧠</span>
+                    <h3>LLM Evaluation</h3>
+                </div>
+                <p>
+                    Retrieved cases are passed to the Groq-hosted LLM, which reasons over
+                    context, may ask clarifying follow-ups, and outputs a final disease and
+                    zone. Its output is scored end-to-end against ground truth on a
+                    smaller, human-reviewable sample.
+                </p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-head">
+                    <span class="method-icon">📐</span>
+                    <h3>Metrics Used</h3>
+                </div>
+                <p>
+                    Disease and zone accuracy, precision, recall and F1 score are computed
+                    per-class and macro-averaged. Response time is measured end-to-end,
+                    from query to final structured output.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Confusion Matrix -->
+
+    <section class="reveal">
+
+        <div class="section-head">
+            <span class="section-tag">06</span>
+            <div>
+                <h2>Confusion Matrix</h2>
+                <p class="section-sub">Per-disease prediction accuracy — a strong diagonal means the model rarely confuses one disease for another. Click a matrix to enlarge.</p>
+            </div>
+        </div>
+
+        <div class="matrix-legend">
+            <span class="matrix-legend-label">Fewer matches</span>
+            <span class="matrix-legend-bar" aria-hidden="true"></span>
+            <span class="matrix-legend-label">More matches</span>
+        </div>
+
+        <div class="matrix-grid">
+
+            <div class="matrix-card">
+
+                <div class="matrix-card-head">
+                    <h3><span class="dot dot-blue"></span>Retrieval</h3>
+                    <span class="matrix-pill">diagonal = correct</span>
+                </div>
+
+                <div class="matrix-frame">
+                    <img
+                        src="/static/retrieval_confusion_matrix.png"
+                        alt="Retrieval Confusion Matrix"
+                        data-full="/static/retrieval_confusion_matrix.png">
+                    <div class="matrix-zoom-hint">🔍 Click to enlarge</div>
+                </div>
+
+                <p class="matrix-caption">Vector-search predictions across 15 clinical categories, evaluated on the full held-out sample.</p>
+
+            </div>
+
+            <div class="matrix-card">
+
+                <div class="matrix-card-head">
+                    <h3><span class="dot dot-teal"></span>LLM</h3>
+                    <span class="matrix-pill matrix-pill-teal">diagonal = correct</span>
+                </div>
+
+                <div class="matrix-frame">
+                    <img
+                        src="/static/llm_confusion_matrix.png"
+                        alt="LLM Confusion Matrix"
+                        data-full="/static/llm_confusion_matrix.png">
+                    <div class="matrix-zoom-hint">🔍 Click to enlarge</div>
+                </div>
+
+                <p class="matrix-caption">Groq LLM reasoning output across the same categories, evaluated on the reviewable sample.</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">✕</button>
+    <img id="lightboxImg" src="" alt="Enlarged confusion matrix">
+</div>
+
+<footer class="app-footer">
+    <p class="footer-title">AI Symptom Checker</p>
+    <p class="footer-sub">Retrieval-Augmented Clinical Decision Support System</p>
+</footer>
+
+<script src="/static/performance.js"></script>
+
+</body>
+
+</html>
