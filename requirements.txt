@@ -1,11 +1,19 @@
 fastapi
 uvicorn[standard]
+jinja2
+python-multipart
+
 sentence-transformers
 scikit-learn
 numpy
 pandas
-openpyxl
-google-genai
-python-dotenv
-qdrant-client
+matplotlib
 
+qdrant-client
+requests
+
+python-dotenv
+
+groq
+
+openpyxl
